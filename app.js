@@ -12,7 +12,9 @@ app.set('view engine', 'hbs');
 
 
 app.get("/", function(req, res, next){
-    res.render("index");
+    res.render("index", {
+		layout:"layout"
+	});
 });
 
 var port = args["-port"] || 1234;
