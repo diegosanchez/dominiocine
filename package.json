@@ -10,6 +10,8 @@
         "express-handlebars": "~1.1.0",
 		"argsparser": "~0.0.6",
 		"body-parser" : "~1.11.0",
-        "jsdom":"~3.1.0"
+        "jsdom":"~3.1.0",
+        "twitter":"~1.2.1",
+        "twitter-tesxt":"~1.11.0"
     }
 }
