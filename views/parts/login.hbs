@@ -1,8 +1,11 @@
-<div>
-    <form>
+<div ng-controller="formLogin">
+    <form method="post">
 
-        E-Mail: <input type="text" value="" /> <br />
-        Password: <input type="password" value="" /> <br />
-
+        E-Mail: <input type="text" ng-model="credential.email" value="" /> <br />
+        Password: <input type="password" ng-model="credential.password" value="" /> <br />
+        <input type="submit" ng-click="login(credential);" value="Ingresar" /> <br />
+    <pre>
+        [[response]]
+    </pre>
     </form>
 </div>

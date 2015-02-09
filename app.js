@@ -2,7 +2,7 @@ var config = require('config');
 var express = require("express");
 var app = express();
 var mongojs = require("mongojs");
-var db = mongojs('dominocine', ['films','twitter','movies','people']);
+var db = mongojs('dominocine', ['films','twitter','movies','people','users']);
 var bodyParser = require('body-parser')
 var exphbs  = require('express-handlebars');
 var args = require( "argsparser" ).parse();
@@ -20,6 +20,9 @@ app.use(session({
     saveUninitialized: true,
     secret: 'secreKey for secre Kat'
 }));
+
+var moduleUser = require("./users/index");
+moduleUser = new moduleUser(db);
 
 
 
@@ -40,6 +43,28 @@ app.get("/", function(req, res, next){
 		layout:"layout"
 	});
 });
+
+
+app.post("/rest/:module", function(req, res, next){
+
+    switch(req.params.module){
+        case 'login':
+            moduleUser.login(req.body, function(err, docs){
+
+                if(err){
+                    res.json({error:err});
+                }else{
+                    if(docs.length===0){
+                        res.json({error:"Bad user or password"});
+                    }else{
+                        res.json({error: null, data:docs[0]});
+                    }//end else
+                }//end else err
+            })
+            break;
+    }
+});
+
 
 app.get("/pages/:name", function(req, res, next){
     var name  = req.params.name || "";
