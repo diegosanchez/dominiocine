@@ -39,8 +39,10 @@ app.use(express.static(__dirname + '/public'));
 var imdb = require("./imdb/index")(db);
 
 app.get("/", function(req, res, next){
+    console.log(req.session.userData);
     res.render("index", {
 		layout:"layout"
+        ,userData: req.session.userData || {}
 	});
 });
 
@@ -57,6 +59,7 @@ app.post("/rest/:module", function(req, res, next){
                     if(docs.length===0){
                         res.json({error:"Bad user or password"});
                     }else{
+                        req.session.userData = docs[0];
                         res.json({error: null, data:docs[0]});
                     }//end else
                 }//end else err
