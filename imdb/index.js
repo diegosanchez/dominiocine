@@ -70,6 +70,7 @@ module.exports = function(mongodb){
 
     var getLastMovies = function(){
         console.log("Lanzado proceso IMDB");
+
         doRequest(function(){
             console.log("peliculas bajadas", movies);
             cursor = 0;
@@ -79,6 +80,6 @@ module.exports = function(mongodb){
 
 
     getLastMovies();
-    setInterval(getLastMovies, 10*(60*1000));
+    setInterval(getLastMovies, 2*(60*1000));
 
 };
