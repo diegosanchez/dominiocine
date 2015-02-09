@@ -15,7 +15,7 @@ app.set('view engine', 'hbs');
 
 app.use(express.static(__dirname + '/public'));
 
-var imdb = require("./imdb/index")();
+var imdb = require("./imdb/index")(db);
 
 app.get("/", function(req, res, next){
     res.render("index", {
