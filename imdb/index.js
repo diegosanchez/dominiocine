@@ -14,7 +14,7 @@ module.exports = function(mongodb){
           "http://www.imdb.com/showtimes/location?ref_=inth_ov_sh_sm",
           ["http://code.jquery.com/jquery.js"],
           function (errors, window) {
-
+                movies  = [];
               var titles = window.$(".lister-item img.loadlate");
               for(var t in titles){
 
