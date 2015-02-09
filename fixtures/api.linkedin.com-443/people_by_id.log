@@ -1,0 +1,25 @@
+GET /v1/people/id=m6TTOZq568?format=json
+host: api.linkedin.com
+accept: */*
+content-type: application/x-www-form-urlencoded
+
+200 HTTP/1.1
+server: Apache-Coyote/1.1
+x-li-request-id: QFVFJ67MSQ
+vary: *
+x-li-format: json
+content-type: application/json;charset=UTF-8
+date: Mon, 09 Feb 2015 20:22:22 GMT
+x-li-fabric: prod-lva1
+transfer-encoding: chunked
+x-li-pop: PROD-ELA4
+x-li-uuid: KUaK4ddVwRPQSLZaAysAAA==
+set-cookie: lidc="b=VB78:g=135:u=1:i=1423513342:t=1423571280:s=AQHr3zyau9GerO1brZ8cezCajYgBRB72"; Expires=Tue, 10 Feb 2015 12:28:00 GMT; domain=.linkedin.com; Path=/
+
+{
+  "firstName": "Diego",
+  "headline": "Business Consulting III  at HP Enterprise Services",
+  "id": "m6TTOZq568",
+  "lastName": "S.",
+  "siteStandardProfileRequest": {"url": "https://www.linkedin.com/profile/view?id=45560710&authType=name&authToken=CyrQ&trk=api*a3658293*s3728423*"}
+}
