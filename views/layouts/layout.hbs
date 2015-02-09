@@ -1,1 +1,46 @@
+<!DOCTYPE html>
+<html lang="es"  ng-app="dc">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, inital-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <title>{{title}}</title>
+
+
+
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
+
+
+    <link rel="stylesheet" type="text/css" href="/css/customstyles.css">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
+
+    <script type="text/javascript" src="/js/app.js"></script>
+</head>
+
+<body ng-controller="bodyCtrl">
+<ul>
+    <li><a href="#/register">Registro</a></li>
+    <li><a href="#/login">Login</a></li>
+</ul>
+
+<div id="main">
+    <div ng-view></div>
+</div><!-- end id main -->
+
+
 {{{body}}}
+</body>
+</html>

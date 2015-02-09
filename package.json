@@ -1,17 +1,30 @@
 {
-    "name": "dominocine.com",
-    "version": "0.0.1",
-    "description": "Donde el cine vive",
-    "dependencies": {
-        "express":"~4.11.2",
-        "mongojs":"~0.18.1",
-        "jsdom":"~3.1.0 ",
-        "express-session":"~1.10.2",
-        "express-handlebars": "~1.1.0",
-		"argsparser": "~0.0.6",
-		"body-parser" : "~1.11.0",
-        "jsdom":"~3.1.0",
-        "twitter":"~1.2.1",
-        "twitter-tesxt":"~1.11.0"
-    }
+  "name": "dominocine.com",
+  "version": "0.0.1",
+  "description": "Donde el cine vive",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --recursive"
+  },
+  "dependencies": {
+    "argsparser": "~0.0.6",
+    "body-parser": "~1.11.0",
+    "config": "^1.10.0",
+    "express": "~4.11.2",
+    "express-handlebars": "~1.1.0",
+    "express-session": "~1.10.2",
+    "jsdom": "~3.1.0",
+    "mongojs": "~0.18.1",
+    "oauth": "^0.9.12",
+    "twitter": "~1.2.1",
+    "twitter-text": "~1.11.0",
+    "cookie-parser":"~1.3.3",
+    "method-override":"~2.3.1",
+    "express-session":"~1.10.2",
+    "connect-redis":"~2.2.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.1.0",
+    "replay": "^1.12.0",
+    "should": "^4.6.5"
+  }
 }

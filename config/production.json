@@ -1,0 +1,8 @@
+{
+  "linkedin": {
+    "consumer_key":"LINKEDIN_CONSUMER_KEY",
+    "consumer_secret":"LINKEDIN_CONSUMER_SECRET",
+    "user_token":"LINKEDIN_USER_TOKEN",
+    "user_secret":"LINKEDIN_USER_SECRET"
+  }
+}
