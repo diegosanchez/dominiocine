@@ -13,6 +13,6 @@
     "mongojs": "~0.18.1",
     "oauth": "^0.9.12",
     "twitter": "~1.2.1",
-    "twitter-tesxt": "~1.11.0"
+    "twitter-text": "~1.11.0"
   }
 }
