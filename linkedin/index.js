@@ -19,6 +19,7 @@ function Client(options) {
 			throw Error( key + ' is missing');
 		}
 		self[key] = options[key];
+
 	});
 
 	this.oauth = new OAuth.OAuth(
@@ -71,6 +72,6 @@ Client.prototype.people = function(options, cb) {
 				throw e; 
 			}
 
-			cb( e, data);
+			cb( e, JSON.parse(data) );
 	}); 
 };
