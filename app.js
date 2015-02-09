@@ -10,6 +10,9 @@ var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override');
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
+var fs = require("fs");
+
+var __droot__ = process.cwd() ;
 
 app.use(session({
     store: new RedisStore({}),
@@ -38,7 +41,20 @@ app.get("/", function(req, res, next){
 	});
 });
 
+app.get("/pages/:name", function(req, res, next){
+    var name  = req.params.name || "";
 
+    var file  = __droot__+"/views/parts/"+name+".hbs";
+    console.log("file require: ", file);
+
+    if(fs.existsSync(file)){
+        res.render("parts/"+name, {layout: false});
+
+    }else{
+        res.render("parts/404.hbs", { layout: false});
+    }//end else
+
+});
 
 
 
