@@ -4,7 +4,7 @@ module.exports = function() {
     var eventEmitter = events.EventEmitter;
     var ee = new eventEmitter();
     var mongojs = require('mongojs');
-    var db = mongojs('cinema26', ['films']);
+    var db = mongojs('cinema25', ['films']);
 
     var _getresults = function(url, cb) {
         var http = require("http");
@@ -26,7 +26,7 @@ module.exports = function() {
             var links = [];
             items = resultset.feed.entry;
             for (var iresult = 0; iresult < items.length; iresult++) {
-
+            
                 links.push(items[iresult]);
             }
             return links;
@@ -34,7 +34,7 @@ module.exports = function() {
         cb(resultset.feed.entry ? _links() : []);
     };
 
-    var _getTrailers = function(moviename, cb) {
+    var _getTrailers = function(moviename, cb) { 
         var url = "http://gdata.youtube.com/feeds/api/videos?q=" + moviename + "-trailer&start-index=1&max-results=10&v=2&alt=json&hd";
 
         _getresults(url, function(resultset) {
@@ -50,48 +50,7 @@ module.exports = function() {
         return cursor == films.length ? false : films[cursor++];
 
     }
-    var _save = function(films) {
-        for (var index = 0; index < films.length; index++) {
 
-
-            var nombre = films[index].title;
-            var trailerspelicula = films[index].trailers; //Añadir tambien una marca para procesar la pelicula. 				
-            db.films.update({
-                    title: nombre
-                }, {
-                    $set: {
-                        trailers: trailerspelicula
-                    }
-                },
-                function(err, updated) {
-                    if (err || !updated) {
-                        console.log("Ocurrio un error");
-                    } else {
-
-                        db.films.update({
-                            title: nombre
-                        }, {
-                            $set: {
-                                actualizado: true
-                            }
-                        }, function(err, updated) {
-
-                            if (err || !updated) {
-                                console.log("Ocurrio un error");
-                            } else {
-                                console.log(" Pelicula Actualizada ");
-                            }
-
-                        });
-
-
-                    }
-                });
-
-
-
-        }
-    }
 
     this.search = function(callback) {
 
@@ -99,15 +58,15 @@ module.exports = function() {
 
             var item = next(films);
             if (item !== false) {
-                _getTrailers(item.title, function(links) {
+                _getTrailers(item.name, function(links) {
                     item.trailers = links;
                     ee.emit("addtrailer", films);
 
                 });
 
             } else {
-                // callback(films); //Llamo a la funcion principal cuando termina toda la asignacion de trailers. 
-                _save(films);
+                callback(films); //Llamo a la funcion principal cuando termina toda la asignacion de trailers. 
+
             }
         });
 
