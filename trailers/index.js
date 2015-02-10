@@ -1,10 +1,10 @@
-module.exports = function() {
+module.exports = function(db) {
 
     var events = require("events");
     var eventEmitter = events.EventEmitter;
     var ee = new eventEmitter();
-    var mongojs = require('mongojs');
-    var db = mongojs('cinema26', ['films']);
+    //var mongojs = require('mongojs');
+      //mongojs('cinema27', ['films']);
 
     var _getresults = function(url, cb) {
         var http = require("http");
@@ -93,7 +93,7 @@ module.exports = function() {
         }
     }
 
-    this.search = function(callback) {
+   
 
         ee.on("addtrailer", function(films) {
 
@@ -106,26 +106,44 @@ module.exports = function() {
                 });
 
             } else {
-                // callback(films); //Llamo a la funcion principal cuando termina toda la asignacion de trailers. 
+                 //Llamo a la funcion principal cuando termina toda la asignacion de trailers. 
                 _save(films);
             }
         });
 
-
-        db.films.find({}, {}, function(err, films) {
+    var actualizarInfo=function()
+	 {
+      db.films.find({}, {}, function(err, films) {
             if (!err) {
 
                 ee.emit("addtrailer", films);
-
-
-
-
             }
 
         });
-
-
-    }
+     }
+   
+   	var procesa=function()
+	{
+	   console.log("Actualizo la informacion");
+	   cursor=0;	
+	   actualizarInfo();
+	  
+	}
+	procesa();
+    setInterval(procesa, 2*(60*1000)); 
+	
+	return new function(){
+		this.search = function(cb){
+			var query = {
+			};
+			
+			db.films.find(query, {}).sort({date:1}, function(err, films){
+				cb(films);
+			});//end find and sort
+		}
+	}
+ 
+    
 
 
 }

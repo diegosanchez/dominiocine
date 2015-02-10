@@ -1,5 +1,5 @@
     var mongojs = require('mongojs');
-    var db = mongojs('cinema26', ['films']);       
+    var db = mongojs('cinema32', ['films']);       
 	   
 	  db.films.save({
             title: "matrix reloaded"
