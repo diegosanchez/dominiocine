@@ -38,12 +38,17 @@ app.use(express.static(__dirname + '/public'));
 
 var imdb = require("./imdb/index")(db);
 
+console.log("imdb", imdb);
 app.get("/", function(req, res, next){
 
-    res.render("index", {
-		layout:"layout"
-        ,userData: req.session.userData || {}
+	imdb.getLastMovies(function(err, docs){
+		res.render("index", {
+			layout:"layout"
+			,movies: docs
+			,userData: req.session.userData || {}
+	    });
 	});
+    
 });
 
 

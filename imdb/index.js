@@ -7,23 +7,28 @@ module.exports = function(mongodb){
 
     var movies = [];
     var cursor = 0;
-
+	var _this = this;
+	this.mongodb = mongodb;
+	
   var doRequest  = function(cb){
       console.log('buscando peliculas nuevas...');
-         jsdom.env(
-          "http://www.imdb.com/showtimes/location?ref_=inth_ov_sh_sm",
+	  //"http://www.imdb.com/showtimes/location?ref_=inth_ov_sh_sm",
+         jsdom.env("http://www.imdb.com/movies-in-theaters/?ref_=ft_inth",
           ["http://code.jquery.com/jquery.js"],
           function (errors, window) {
                 movies  = [];
-              var titles = window.$(".lister-item img.loadlate");
+              var titles = window.$("img.poster");
+			  
               for(var t in titles){
-
+					
                   if(typeof titles[t].alt !="undefined" && typeof titles[t].src!="undefined"){
+				  
                       movies.push({
                           title:titles[t].alt
                           ,img: titles[t].src
                       });
                   }//end if
+				  
               }//end for
               cb();
           }//end cb
@@ -33,19 +38,15 @@ module.exports = function(mongodb){
 
     var $next=function(){
         if(cursor===movies.length){
-            console.log("todo termino ", movies.length);
             return false;
         }else{
             var $return=  movies[cursor++];
-            console.log("lanzando evento ", $return);
             Emitter.emit("next", $return);
             return $return;
         }
     };
 
     Emitter.on("next", function(movie){
-        console.log("evento lanzado: ", movie);
-
         var query = {
             title: movie.title
         };
@@ -55,12 +56,17 @@ module.exports = function(mongodb){
                 $next();
             } else{
                 if(docs.length==0){
+					movie.date = new Date();
+					movie.book = false;
+					movie.trailer = false;
+					movie.wiki = false;
+					movie.linkedin = false;
+					movie.twitter = false;
+					
                     mongodb.films.save(movie, function(){
-                        console.log("guardando pelicula nueva: ", movie.title);
                         $next();
                     });
                 }else{
-                    console.log("Pelicula existente: ", movie.title);
                     $next();
                 }//end else
             }//end else
@@ -68,18 +74,27 @@ module.exports = function(mongodb){
     });
 
 
-    var getLastMovies = function(){
+    var getLastMoviesFromIMDB = function(){
         console.log("Lanzado proceso IMDB");
 
         doRequest(function(){
-            console.log("peliculas bajadas", movies);
             cursor = 0;
             $next();
         });
     };
 
 
-    getLastMovies();
-    setInterval(getLastMovies, 2*(60*1000));
+    getLastMoviesFromIMDB();
+    setInterval(getLastMoviesFromIMDB, 2*(60*1000));
 
+	return new function(){
+		this.getLastMovies = function(cb){
+			var query = {
+			};
+			
+			_this.mongodb.films.find(query, {}).sort({date:1}, function(err, docs){
+				cb(err, docs);
+			});//end find and sort
+		}
+	}
 };

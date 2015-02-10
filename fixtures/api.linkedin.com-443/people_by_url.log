@@ -1,0 +1,25 @@
+GET /v1/people/url=https%3A%2F%2Far.linkedin.com%2Fin%2Fabogadaelianacaria?format=json
+host: api.linkedin.com
+accept: */*
+content-type: application/x-www-form-urlencoded
+
+200 HTTP/1.1
+server: Apache-Coyote/1.1
+x-li-request-id: BQLD4E8OQO
+vary: *
+x-li-format: json
+content-type: application/json;charset=UTF-8
+date: Tue, 10 Feb 2015 00:10:04 GMT
+x-li-fabric: prod-lva1
+transfer-encoding: chunked
+x-li-pop: PROD-ELA4
+x-li-uuid: BGkBv0RiwRNQyEvoxyoAAA==
+set-cookie: lidc="b=VB78:g=135:u=1:i=1423527004:t=1423571280:s=AQEcunhFE5E4kV22MaepUjFap-QuYrZD"; Expires=Tue, 10 Feb 2015 12:28:00 GMT; domain=.linkedin.com; Path=/
+
+{
+  "firstName": "Eliana",
+  "headline": "Analista SSr. de Legales en Telecom Argentina",
+  "id": "6nAaMlzNin",
+  "lastName": "Caria",
+  "siteStandardProfileRequest": {"url": "https://www.linkedin.com/profile/view?id=56071036&authType=name&authToken=eGG5&trk=api*a3658293*s3728423*"}
+}

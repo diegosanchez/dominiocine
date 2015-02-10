@@ -42,6 +42,32 @@ Client.prototype.request_access_token_url = function() {
 	return this.api_url() + '/uas/oauth/accessToken';
 };
 
+Client.prototype.buildQuery = function(options) {
+	var opts = options || {} ;
+	var defaultFormat = opts.format || 'json';
+
+  var self = this;
+  var builder = {
+    id: function() {
+	    return util.format( self.api_url() + '/v1/people/id=%s?format=%s', opts.id,
+          defaultFormat);
+    },
+    url: function() {
+	    return util.format( self.api_url() + '/v1/people/url=%s?format=%s', 
+          encodeURIComponent(opts.url), defaultFormat);
+
+    }
+  };
+
+  // Looks for a builder for the options provided
+  for( var k in options) {
+    if ( k in builder )
+      return builder[k]();
+  };
+
+  throw Error('Invalid query');
+}
+
 /****
 * It returns a persone depending on the query you've posted
 *
@@ -60,11 +86,7 @@ Client.prototype.request_access_token_url = function() {
 * 		})
 */
 Client.prototype.people = function(options, cb) {
-	var _opts = options || {} ;
-	var _format = _opts.format || 'json';
-
-	var query = util.format( this.api_url() + '/v1/people/id=%s?format=%s', 
-		_opts.id, _format);
+	var query = this.buildQuery(options);
 
 	this.oauth.get(query, this.user_token, this.user_secret, 
 		function ( e, data, res ) {
