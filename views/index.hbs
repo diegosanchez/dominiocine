@@ -2,9 +2,15 @@
 
 <ul>
 {{#each movies}}
-  <li>
+  <li class="itemFilm">
 	<a href="#/movie/{{this.title}}">{{title}}</a>
 	<a href="#/movie/{{this.title}}"><img src="{{this.img}}" alt="{{this.title}}" /></a>
+	<div>
+		{{#each this.books}}
+		  {{this.id}}
+		{{/each}}
+		
+	</div>
   </li>
  {{/each}}
  

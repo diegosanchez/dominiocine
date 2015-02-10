@@ -46,6 +46,8 @@ var imdb = require("./imdb/index")(db);
 app.get("/", function(req, res, next){
 
 	imdb.getLastMovies(function(err, docs){
+	
+	for(var x=0; x<docs.length; x++) console.log(docs[x].books);
 		res.render("index", {
 			layout:"layout"
 			,movies: docs
