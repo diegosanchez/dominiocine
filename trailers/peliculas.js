@@ -1,16 +1,16 @@
     var mongojs = require('mongojs');
-    var db = mongojs('cinema25', ['films']);       
+    var db = mongojs('cinema26', ['films']);       
 	   
 	  db.films.save({
-            name: "matrix reloaded"
+            title: "matrix reloaded"
        });
 	  	  db.films.save({
-            name: "alien"
+            title: "alien"
        });
 	  	  db.films.save({
-            name: "predator"
+            title: "predator"
        });
 	  	  db.films.save({
-            name: "robocop"
+            title: "robocop"
        });
 	  
