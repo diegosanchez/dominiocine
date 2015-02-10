@@ -12,9 +12,14 @@ module.exports = function(mongodb){
 	
   var doRequest  = function(cb){
       console.log('buscando peliculas nuevas...');
-	  //"http://www.imdb.com/showtimes/location?ref_=inth_ov_sh_sm",
-         jsdom.env("http://www.imdb.com/movies-in-theaters/?ref_=ft_inth",
+	  //"http://www.imdb.com/showtimes/location",
+         jsdom.env("http://akas.imdb.com/movies-in-theaters/",
           ["http://code.jquery.com/jquery.js"],
+		  {
+		  headers:{
+				"Accept-Language":"en" 
+			}
+		  },
           function (errors, window) {
                 movies  = [];
               var titles = window.$("img.poster");
@@ -56,6 +61,7 @@ module.exports = function(mongodb){
                 $next();
             } else{
                 if(docs.length==0){
+					movie.title = movie.title.replace(" Poster","");
 					movie.date = new Date();
 					movie.book = false;
 					movie.trailer = false;

@@ -38,7 +38,6 @@ app.use(express.static(__dirname + '/public'));
 
 var imdb = require("./imdb/index")(db);
 
-console.log("imdb", imdb);
 app.get("/", function(req, res, next){
 
 	imdb.getLastMovies(function(err, docs){
