@@ -11,6 +11,11 @@ var methodOverride = require('method-override');
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 var fs = require("fs");
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+
+
 
 var __droot__ = process.cwd() ;
 
@@ -89,10 +94,29 @@ app.get("/pages/:name", function(req, res, next){
 });
 
 
-
 var port = args["-port"] || 1234;
+
+http.listen(port, function(){
+  console.log('listening on *:', port);
+});
+
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
+  
+  
+   socket.on('chat message', function(msg){
+		console.log('message: ' + msg);
+		io.emit('chat message', msg);
+  });
+  
+  
+});
 console.log("arrancando en port ", port	);
-app.listen(port);
+
 
 
 

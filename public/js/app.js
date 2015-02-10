@@ -12,6 +12,10 @@ dc.config(function($routeProvider) {
             templateUrl : '/pages/login',
             controller  : 'bodyCtrl'
         })
+		.when('/chat', {
+            templateUrl : '/pages/chat',
+            controller  : 'bodyCtrl'
+        })
         .when('/register', {
             templateUrl : '/pages/register',
             controller  : 'bodyCtrl'
@@ -20,7 +24,21 @@ dc.config(function($routeProvider) {
 
 
 dc.controller("bodyCtrl", function($scope, $http, $location){
-
+	console.log("bodyCtrl called");
+			var socket = io();
+		  $('#sendBtn').click(function(){
+					console.log("enviando");	
+					socket.emit('chat message', $('#m').val());
+					$('#m').val('');
+					return false;
+			});
+			
+			
+			socket.on('chat message', function(msg){
+					$('#messages').append($('<li>').text(msg));
+						console.log("llego mensaje: ", new Date().getTime(), msg, diff);
+			  });
+  
 });
 
 
