@@ -10,6 +10,11 @@ module.exports = function(mongodb){
 	var _this = this;
 	this.mongodb = mongodb;
 	
+  var clean = function(title){
+    var $re = title.replace(" Poster","");
+	return $re;
+  };
+  
   var doRequest  = function(cb){
       console.log('buscando peliculas nuevas...');
 	  //"http://www.imdb.com/showtimes/location",
@@ -53,7 +58,7 @@ module.exports = function(mongodb){
 
     Emitter.on("next", function(movie){
         var query = {
-            title: movie.title
+            title: clean(movie.title)
         };
         mongodb.films.find(query, {}, function(err, docs){
             if(err){
@@ -61,13 +66,15 @@ module.exports = function(mongodb){
                 $next();
             } else{
                 if(docs.length==0){
-					movie.title = movie.title.replace(" Poster","");
+					movie.title = clean(movie.title)
 					movie.date = new Date();
 					movie.book = false;
 					movie.trailer = false;
 					movie.wiki = false;
 					movie.linkedin = false;
+					movie.subtitle = false;
 					movie.twitter = false;
+					movie.image = false;
 					
                     mongodb.films.save(movie, function(){
                         $next();

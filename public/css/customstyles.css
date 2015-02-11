@@ -6,3 +6,10 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
+	  
+	  
+.itemFilm{ display:block; clear: both; border-top: 2px solid #efefef;}	  
+.itemFilm .images {}
+.itemFilm .images ul {display:block; width: 100%;}
+.itemFilm .images ul li{float: left; width:300px; heigth: 250px;}
+.itemFilm .images ul li img{width: 100%;}
