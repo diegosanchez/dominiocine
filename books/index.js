@@ -16,7 +16,7 @@ module.exports = function(){
 	var _this = this;
 	
 	this.getBooks = function(movieName, lang, cb){
-		console.log('Buscando películas relacionadas..');
+	
 		var body = "";
 		var link = "https://www.googleapis.com/books/v1/volumes?q="+movieName+"&langRestrict="+lang+"&fields=items(id,selfLink,volumeInfo)";
 
@@ -25,11 +25,12 @@ module.exports = function(){
 				res.on('data', function(data){ body +=data; });
 				res.on('end', function(){
 					var json = JSON.parse(body);
+					console.log(link);
 					cb(json.items);
 				});
 			}//end all is ok
 			else{
-				console.log("Ha ocurrido un error! ", res.statusCode);
+				console.log("Ha ocurrido un error! " , res.statusCode);
 			}
 		});//end http.get
 	}//end getBooks	
@@ -41,21 +42,42 @@ module.exports = function(){
 	
 		console.log("Actualizando libros en DB");
 		
-		db.films.find({},{book:1, title:1},function(err, docs){
+		var $next=function(){
+			if(cursor===movies.length){
+				return false;
+			}else{
+				var $return= movies[cursor++];
+				return $return;
+			}
+		};
+		
+		var updateBooks = function(movieTitle){
+			_this.getBooks(movieTitle, "en", function(books){
+				db.films.update({title:movieTitle}, {$set:{books:books, book:true}}, {multi:1}, function(err, docs) {
+					if(err){
+						console.log("Error en update");
+					}else{
+						console.log("Se han cargado los libros de " + movieTitle, docs);
+						var nextMovie = $next().title;
+						if(nextMovie!=undefined)
+							updateBooks(nextMovie);
+					}
+				});//end db.films.update
+			});//end getBooks
+		};
+		
+		db.films.find({book: false},{book:1, title:1},{limit : 10},function(err, docs){
             if(err){
-                console.log("Error busqueda de libros");
+                console.log("Error busqueda en db libros");
             } else{
                 if(docs.length==0){
-					console.log("Sin peliculas");
+					console.log("Sin peliculas para buscar libros.. ");
                 }else{
-					console.log(docs);
-					
+					movies = docs;
+					console.log(movies.length);
+					updateBooks(movies[cursor].title);
                 }//end else
             }//end else
-        });
+        });//end db.films.find
 	}
-	
-	
-	
-}	
-
+}
