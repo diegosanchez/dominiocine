@@ -16,7 +16,7 @@ module.exports = function(){
 	var _this = this;
 	
 	this.getBooks = function(movieName, lang, cb){
-	
+
 		var body = "";
 		var link = "https://www.googleapis.com/books/v1/volumes?q="+movieName+"&langRestrict="+lang+"&fields=items(id,selfLink,volumeInfo)";
 
@@ -30,7 +30,7 @@ module.exports = function(){
 				});
 			}//end all is ok
 			else{
-				console.log("Ha ocurrido un error! " , res.statusCode);
+				console.log("Ha ocurrido un error! ", res.statusCode);
 			}
 		});//end http.get
 	}//end getBooks	
@@ -38,7 +38,7 @@ module.exports = function(){
 	this.actualizarDBLibros = function(){
 	
 		var cursor = 0;
-		var movies = [];
+		var movies;
 	
 		console.log("Actualizando libros en DB");
 		
@@ -46,38 +46,46 @@ module.exports = function(){
 			if(cursor===movies.length){
 				return false;
 			}else{
-				var $return= movies[cursor++];
+				var $return=  movies[cursor++];
 				return $return;
 			}
-		};
+		};//end $next
 		
-		var updateBooks = function(movieTitle){
+		var updateInfoBookDB = function(movieTitle){
 			_this.getBooks(movieTitle, "en", function(books){
-				db.films.update({title:movieTitle}, {$set:{books:books, book:true}}, {multi:1}, function(err, docs) {
-					if(err){
-						console.log("Error en update");
-					}else{
-						console.log("Se han cargado los libros de " + movieTitle, docs);
-						var nextMovie = $next().title;
-						if(nextMovie!=undefined)
-							updateBooks(nextMovie);
-					}
-				});//end db.films.update
-			});//end getBooks
-		};
+				if(books != undefined)
+					db.films.update({title:movieTitle},{$set: { books:books, book:true }}, {multi:true}, function(err, docs){
+						if(err){
+							console.log("Pelicula: "+movieTitle+" >> Books >> Error al hacer update en la base");
+						}else{
+							console.log("Pelicula: "+movieTitle+" >> Books >> Libros cargados", docs);
+						}
+					});
+				else 
+					db.films.update({title:movieTitle},{$set: { books:[], book:true }}, {multi:true}, function(err, docs){
+						if(!err)
+							console.log("Pelicula: "+movieTitle+" >> Books >> No se encontraron libros relacionados", docs);
+					});
+				var nextBook = $next();
+				if(nextBook != false)
+					updateInfoBookDB(nextBook.title);
+			});//end getBook
+		};//end updateInfoBookDB
 		
-		db.films.find({book: false},{book:1, title:1},{limit : 10},function(err, docs){
+		db.films.find({book:false},{book:1, title:1},{limit:10},function(err, docs){
             if(err){
                 console.log("Error busqueda en db libros");
             } else{
                 if(docs.length==0){
 					console.log("Sin peliculas para buscar libros.. ");
                 }else{
+					//console.log(docs.length);
 					movies = docs;
-					console.log(movies.length);
-					updateBooks(movies[cursor].title);
+					updateInfoBookDB(movies[0].title);
                 }//end else
             }//end else
         });//end db.films.find
-	}
-}
+		
+	}//end actualizarDBLibros
+}//end module.exports	
+
