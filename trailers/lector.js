@@ -1,5 +1,5 @@
 var mongojs = require('mongojs');
-var db = mongojs('cinema32', ['films']);
+var db = mongojs('cinema38', ['films']);
 
   db.films.find({}, {}, function(err, films) {
             if (!err) {            
