@@ -1,0 +1,8 @@
+<h2>Ultimas peliculas cargadas</h2>
+{{#each films}}
+    <h3>{{this.title}}</h3>
+	<img src="{{this.img}}" alt="{{this.title}}">
+	<p>{{this.date}}</p>
+	<a href="/edit?{{this._id}}">Editar</a>
+	<hr>
+{{/each}}
