@@ -3,7 +3,7 @@ module.exports = function(db) {
     var events = require("events");
     var eventEmitter = events.EventEmitter;
     var ee = new eventEmitter();
-	
+	var callback=null;	
    
     
     var _getresults = function(url, cb) {
@@ -79,8 +79,9 @@ module.exports = function(db) {
                                 console.log("Ocurrio un error");
                             } else {
                                 console.log(" Pelicula Actualizada ");
-								cb();
+								
                             }
+							cb();
 
                         });
 
@@ -96,6 +97,7 @@ module.exports = function(db) {
 
             var item = next(films);
             if (item !== false) {
+			      console.log("La pelicula es", item.title);
                 _getTrailers(item.title, function(links) {
                     item.trailers = links;
 					saveMovie(item, function() {
@@ -108,16 +110,23 @@ module.exports = function(db) {
 
             } else {
                  
-			   console.log("Termino de actualizar");
+			   console.log("Termino de actualizar");			 
+			   if (callback)
+			   {  
+			      callback();  
+			   
+			   }
 			
 			   
 			   
             }
         });
+		
 
     var actualizarInfo=function()
 	 {
-      db.films.find({}, {}, function(err, films) {
+	 
+	    db.films.find({actualizado:false}, {}).limit(3,function(err, films) {     
             if (!err) {
 
                 ee.emit("addtrailer", films);
@@ -133,21 +142,33 @@ module.exports = function(db) {
 	   actualizarInfo();
 	  
 	}
-	procesa();
-    setInterval(procesa, 2*(60*1000)); 
+	
+	var run=function()
+	{
+	  procesa();
+      setInterval(procesa, 10000); 
+	}
+	
 	
 	return new function(){
-		this.search = function(cb){
-			var query = {
-			};
-			
-		   db.films.find(query, {}).sort({date:1}, function(err, films){
-		   cb(films);
-			});//end find and sort
+		this.search = function(cb){		
+		 
+	           callback=function()
+               {
+			        
+                    var viewRecords=function(){
+                                					
+			             
+						 var query={actualizado:true};
+						 db.films.find(query, {}, function(err, films){
+						                                                                                       console.log(films.length);
+		                                                                                                       cb(err,films);});
+					   };
+					   
+					viewRecords();
+			   }
+               run();   
+	 	  	  
 		}
 	}
- 
-    
-
-
 }
