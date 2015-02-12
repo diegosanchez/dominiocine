@@ -7,6 +7,16 @@
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
 	  
+#menu_home{
+	background-color: black;
+	color: white;
+}
+
+#menu_home a{
+	padding:5px;
+	color: white;
+	text-decoration: none;
+}
 	  
 .itemFilm{ display:block; clear: both; border-top: 2px solid #efefef;}	  
 .itemFilm .images {}
