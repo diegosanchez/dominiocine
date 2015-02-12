@@ -45,17 +45,11 @@ var imdb = require("./imdb/index")(db);
 var images = require("./images/index")(db);
 
 app.get("/", function(req, res, next){
-
-	imdb.getLastMovies(function(err, docs){
 	
-	for(var x=0; x<docs.length; x++) console.log(docs[x].books);
 		res.render("index", {
 			layout:"layout"
-			,movies: docs
-			,userData: req.session.userData || {}
 	    });
-	});
-    
+	
 });
 
 
@@ -89,11 +83,33 @@ app.get("/pages/:name", function(req, res, next){
 
     if(fs.existsSync(file)){
         res.render("parts/"+name, {layout: false});
-
     }else{
         res.render("parts/404.hbs", { layout: false});
     }//end else
 
+});
+
+
+app.get("/home", function(req, res, next){
+	imdb.getLastMovies(function(err, docs){
+			for(var x=0; x<docs.length; x++){
+				var film = docs[x];
+				if(typeof film.images!=="undefined"){
+					film.portada = film.images[2].unescapedUrl;
+				}
+				
+				if(typeof film.books!=="undefined"){
+					film.book = film.books[1];
+				}
+				
+				
+			}//end for 
+			
+			res.render("parts/home", {
+				layout: false
+				,movies: docs
+			});
+	});//end getLastMovies
 });
 
 

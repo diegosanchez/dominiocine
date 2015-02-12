@@ -12,8 +12,16 @@ dc.config(function($routeProvider) {
             templateUrl : '/pages/login',
             controller  : 'bodyCtrl'
         })
+		.when('/', {
+            templateUrl : '/home',
+            controller  : 'bodyCtrl'
+        })
 		.when('/chat', {
             templateUrl : '/pages/chat',
+            controller  : 'bodyCtrl'
+        })
+		.when('/movie/:title', {
+            templateUrl : '/movie/:title',
             controller  : 'bodyCtrl'
         })
         .when('/register', {
