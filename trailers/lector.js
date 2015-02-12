@@ -8,7 +8,7 @@ var db = mongojs('cinema71', ['films']);
 						   {
 						       console.log(films[index].title);
 						       console.log("La coleccion de trailers es", films[index].trailers);
-							   console.log("El flag es ",films[index].actualizado);
+							   console.log("El flag es ",films[index].trailer);
 						        
 						   
 						   }

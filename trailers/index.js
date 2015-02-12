@@ -50,6 +50,7 @@ module.exports = function(db) {
         return cursor == films.length ? false : films[cursor++];
 
     }
+	
 	var saveMovie=function(film, cb)
 	{
 	    var nombre= film.title;
@@ -59,38 +60,20 @@ module.exports = function(db) {
                     title: nombre
                 }, {
                     $set: {
-                        trailers: trailerspelicula
+                        trailers: trailerspelicula,trailer:true
                     }
                 },
                 function(err, updated) {
                     if (err || !updated) {
                         console.log("Ocurrio un error");
-                    } else {
-
-                        db.films.update({
-                            title: nombre
-                        }, {
-                            $set: {
-                                actualizado: true
-                            }
-                        }, function(err, updated) {
-
-                            if (err || !updated) {
-                                console.log("Ocurrio un error");
-                            } else {
-                                console.log(" Pelicula Actualizada ");
-								
-                            }
-							cb();
-
-                        });
-
-
+                    } else {                        
+                        cb();
                     }
                 });
 			    
 		
 	}		
+
 
 
          ee.on("addtrailer", function(films) {
@@ -126,7 +109,7 @@ module.exports = function(db) {
     var actualizarInfo=function()
 	 {
 	 
-	    db.films.find({actualizado:false}, {}).limit(3,function(err, films) {     
+	    db.films.find({"trailer": {$exists:false}}, {}).limit(3,function(err, films) {     
             if (!err) {
 
                 ee.emit("addtrailer", films);
@@ -159,7 +142,7 @@ module.exports = function(db) {
                     var viewRecords=function(){
                                 					
 			             
-						 var query={actualizado:true};
+						 var query={trailer:true};
 						 db.films.find(query, {}, function(err, films){
 						                                                                                       console.log(films.length);
 		                                                                                                       cb(err,films);});

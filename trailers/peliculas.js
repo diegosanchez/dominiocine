@@ -4,28 +4,28 @@
 	   
 	  db.films.remove({},{multi:true}); 
 	  db.films.save({
-            title: "matrix reloaded",actualizado:false
+            title: "matrix reloaded"
        });
 	  	  db.films.save({
-            title: "alien",actualizado:false
+            title: "alien"
        });
 	  	  db.films.save({
-            title: "predator",actualizado:false
+            title: "predator"
        });
 	  	  db.films.save({
-            title: "robocop",actualizado:false
+            title: "robocop"
        });
 	     db.films.save({
-            title: "terminator",actualizado:false
+            title: "terminator"
        });
 	      db.films.save({
-            title: "kill bill",actualizado:false
+            title: "kill bill"
        });
 	        db.films.save({
-            title: "avengers",actualizado:false
+            title: "avengers"
        });
 	        db.films.save({
-            title: "rocky",actualizado:false
+            title: "rocky"
        });
 	   console.log("Termine");
 	  
