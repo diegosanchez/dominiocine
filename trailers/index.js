@@ -3,9 +3,9 @@ module.exports = function(db) {
     var events = require("events");
     var eventEmitter = events.EventEmitter;
     var ee = new eventEmitter();
-    //var mongojs = require('mongojs');
-      //mongojs('cinema27', ['films']);
-
+	var callback=null;	
+   
+    
     var _getresults = function(url, cb) {
         var http = require("http");
         var buffer = "";
@@ -50,70 +50,66 @@ module.exports = function(db) {
         return cursor == films.length ? false : films[cursor++];
 
     }
-    var _save = function(films) {
-        for (var index = 0; index < films.length; index++) {
-
-
-            var nombre = films[index].title;
-            var trailerspelicula = films[index].trailers; //Añadir tambien una marca para procesar la pelicula. 				
-            db.films.update({
+	
+	var saveMovie=function(film, cb)
+	{
+	    var nombre= film.title;
+		
+		var trailerspelicula=film.trailers;
+		 db.films.update({
                     title: nombre
                 }, {
                     $set: {
-                        trailers: trailerspelicula
+                        trailers: trailerspelicula,trailer:true
                     }
                 },
                 function(err, updated) {
                     if (err || !updated) {
                         console.log("Ocurrio un error");
-                    } else {
-
-                        db.films.update({
-                            title: nombre
-                        }, {
-                            $set: {
-                                actualizado: true
-                            }
-                        }, function(err, updated) {
-
-                            if (err || !updated) {
-                                console.log("Ocurrio un error");
-                            } else {
-                                console.log(" Pelicula Actualizada ");
-                            }
-
-                        });
-
-
+                    } else {                        
+                        cb();
                     }
                 });
+			    
+		
+	}		
 
 
 
-        }
-    }
-
-   
-
-        ee.on("addtrailer", function(films) {
+         ee.on("addtrailer", function(films) {
 
             var item = next(films);
             if (item !== false) {
+			      console.log("La pelicula es", item.title);
                 _getTrailers(item.title, function(links) {
                     item.trailers = links;
-                    ee.emit("addtrailer", films);
-
+					saveMovie(item, function() {
+					                                 ee.emit("addtrailer", films);
+					
+					                            });
+                  
+                     
                 });
 
             } else {
-                 //Llamo a la funcion principal cuando termina toda la asignacion de trailers. 
-                _save(films);
+                 
+			   console.log("Termino de actualizar");			 
+			   if (callback)
+			   {  
+			      callback();  
+			   
+			   }
+			
+			   
+			   
             }
         });
+		
 
     var actualizarInfo=function()
 	 {
-      db.films.find({}, {}, function(err, films) {
+	 
+	    db.films.find({"trailer": {$exists:false}}, {}).limit(3,function(err, films) {     
             if (!err) {
 
                 ee.emit("addtrailer", films);
@@ -129,21 +125,33 @@ module.exports = function(db) {
 	   actualizarInfo();
 	  
 	}
-	procesa();
-    setInterval(procesa, 2*(60*1000)); 
+	
+	var run=function()
+	{
+	  procesa();
+      setInterval(procesa, 10000); 
+	}
+	
 	
 	return new function(){
-		this.search = function(cb){
-			var query = {
-			};
-			
-			db.films.find(query, {}).sort({date:1}, function(err, films){
-				cb(films);
-			});//end find and sort
+		this.search = function(cb){		
+		 
+	           callback=function()
+               {
+			        
+                    var viewRecords=function(){
+                                					
+			             
+						 var query={trailer:true};
+						 db.films.find(query, {}, function(err, films){
+						                                                                                       console.log(films.length);
+		                                                                                                       cb(err,films);});
+					   };
+					   
+					viewRecords();
+			   }
+               run();   
+	 	  	  
 		}
 	}
- 
-    
-
-
 }

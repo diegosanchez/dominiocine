@@ -26,12 +26,15 @@ var getMovies = function(cb){
 }(function(a){stream(a);});
 
 var stream =  function(peliculas){
+						console.log("peliculas a streamear. ",peliculas);
 						client.stream('statuses/filter', {track: peliculas}, function(stream) {
-						  stream.on('data', function(tweet) {    
+						  stream.on('data', function(tweet) {
+								tweet.pelicula = identificar(peliculas, tweet);
 								console.log('@' + tweet.user.screen_name + ': ' + tweet.text);
-								db.twitter.save(tweet, function(err, docs){
-									console.log('Tweet  ' + tweet.id + ' saved.');
-							});
+								if(tweet.pelicula)
+									db.twitter.save(tweet, function(err, docs){
+										console.log('Tweet  ' , tweet.id , ' saved. Movie:',tweet.pelicula);
+									});
 						  });
 						 
 						  stream.on('error', function(error) {
@@ -41,13 +44,18 @@ var stream =  function(peliculas){
 						});
 				}		
 var identificar =  function(peliculas, tweet){
-						var t = tweet.roLowerCase();
-						var p = peliculas.split(",");
+						var t = tweet.text.toLowerCase();
+						var p = peliculas.toLowerCase().split(",");
 						for(var x in p){
-							if(t.indexOf(p[x]) > -1)
-								return p[x];
-							else if(t.indexOf(p[x].split(" ").join("")) > -1)
-									return p[x];
+							var mov = p[x].trim();
+							if(t.indexOf(mov) > -1)
+								return mov;
+							else if(t.indexOf(mov.split(" ").join("")) > -1)
+									return mov;
 						}
+						return null;
+					};
+
+var inter = function(){getMovies((function(a){stream(a);}))}					
 					
-					}
+setInterval(inter, 10000);					
