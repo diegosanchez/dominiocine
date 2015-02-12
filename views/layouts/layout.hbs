@@ -9,20 +9,6 @@
     <title>{{title}}</title>
 
 
-
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css" />
-
-
-    <link rel="stylesheet" type="text/css" href="/css/customstyles.css">
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
 
@@ -34,14 +20,85 @@
 	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 
 
+	<!-- Google fonts -->
+<link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
+
+<!-- font awesome -->
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+<!-- bootstrap -->
+<link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
+
+<!-- animate.css -->
+<link rel="stylesheet" href="/assets/animate/animate.css" />
+<link rel="stylesheet" href="/assets/animate/set.css" />
+
+<!-- gallery -->
+<link rel="stylesheet" href="/assets/gallery/blueimp-gallery.min.css">
+
+<!-- favicon -->
+<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+<link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/assets/style.css">
+	
 </head>
 
 <body ng-controller="bodyCtrl">
+<<<<<<< HEAD
+
+<div class="topbar animated fadeInLeftBig"></div>
+
+<!-- Header Starts -->
+<div class="navbar-wrapper">
+      <div class="container">
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation" id="top-nav">
+          <div class="container">
+            <div class="navbar-header">
+              <!-- Logo Starts -->
+              <a class="navbar-brand" href="#home"><img src="/images/logodomino.png" alt="logo"></a>
+              <!-- #Logo Ends -->
+
+
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle naviga	tion</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+
+            </div>
+
+
+            <!-- Nav Starts -->
+            <div class="navbar-collapse  collapse">
+              <ul class="nav navbar-nav navbar-right scroll">
+                 <li class="active"><a href="#/">Home</a></li>
+				 <li ><a href="#/login">Login</a></li>
+                 <li ><a href="#/register">Registro</a></li>
+                 <li ><a href="#/events">Eventos</a></li>
+                 <li ><a href="#/chat">Chat</a></li>
+              </ul>
+            </div>
+            <!-- #Nav Ends -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+<!-- #Header Starts -->
+
+
+=======
 <ul class="list-unstyled list-inline" id="menu_home">
     <li><a href="#/register">Registro</a></li>
     <li><a href="#/chat">Chat</a></li>
     <li><a href="#/login">Login</a></li>
 </ul>
+>>>>>>> fb543b3af67aca63caf94fc02192431d44cf5bce
 
 <div id="main">
     <div ng-view></div>
@@ -49,5 +106,34 @@
 
 
 {{{body}}}
+
+<!-- Footer Starts -->
+<div class="footer text-center spacer">
+<p class="wowload flipInX"><a href="#"><i class="fa fa-facebook fa-2x"></i></a> <a href="#"><i class="fa fa-instagram fa-2x"></i></a> <a href="#"><i class="fa fa-twitter fa-2x"></i></a> <a href="#"><i class="fa fa-flickr fa-2x"></i></a> </p>
+Copyright 2015 DominoCine.com . All rights reserved.
+</div>
+<!-- # Footer Ends -->
+
+<!-- jquery -->
+<script src="/assets/jquery.js"></script>
+
+<!-- wow script -->
+<script src="/assets/wow/wow.min.js"></script>
+
+
+<!-- boostrap -->
+<script src="/assets/bootstrap/js/bootstrap.js" type="text/javascript" ></script>
+
+<!-- jquery mobile -->
+<script src="/assets/mobile/touchSwipe.min.js"></script>
+<script src="/assets/respond/respond.js"></script>
+
+<!-- gallery -->
+<script src="/assets/gallery/jquery.blueimp-gallery.min.js"></script>
+
+<!-- custom script -->
+<script src="/assets/script.js"></script>
+
+
 </body>
 </html>
