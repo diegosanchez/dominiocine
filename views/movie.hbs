@@ -2,7 +2,7 @@
 <div id="about"  class="container spacer about">
 <h2 class="text-center wowload fadeInUp">Trailers {{movie.title}}</h2>  
 	<div class="row">
-		<div class="col-sm-6 wowload fadeInLeft">
+		<div class="clearfix grid">
 			{{#each trailers}}
 				<iframe width="420" height="315" src="https://www.youtube.com/embed/{{this.media$group.yt$videoid.$t}}" frameborder="0" allowfullscreen></iframe>
 			{{/each}}
@@ -19,13 +19,20 @@
 				<img src="{{this.url}}" alt="titleNoFormatting"/>
 			</figure>
 			{{/each}}
-		
 	</div>	 
   
 <h2 class="text-center wowload fadeInUp">Tweets de {{movie.title}}</h2>  
 
 <h2 class="text-center wowload fadeInUp">Libos de  {{movie.title}}</h2>  
 
+<div class="clearfix grid">
+		
+			{{#each books}}
+			 <a href="{{this.volumeInfo.previewLink}}">{{this.volumeInfo.title}}</a>
+			 <p>{{this.volumeInfo.description}}</p>
+			{{/each}}
+	</div>	 
+	
 <h2 class="text-center wowload fadeInUp">Subtitulos de {{movie.title}} </h2>  
  
   

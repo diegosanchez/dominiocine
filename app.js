@@ -117,7 +117,7 @@ app.get("/movie/:id", function(req, res, next){
 	imdb.getMovieById(req.params.id, function(err, movie){
 				movie = movie[0];
 				
-				console.log(movie);
+				
 			res.render("movie", {
 				layout: false
 				,movie: movie
