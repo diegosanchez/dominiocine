@@ -30,8 +30,7 @@ module.exports = function(mongodb){
 	}//end getBooks	
 
 	Emitter.on("next", function(movie){
-	
-		getBooks(movie.title, "en", function(books){
+		getBooks(movie.title.substr(0, movie.title.indexOf('(')), "en", function(books){
 			if(books != undefined)
 				mongodb.films.update({title:movie.title},{$set: { books:books, book:true }}, {multi:true}, function(err, docs){
 					if(err){
