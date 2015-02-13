@@ -1,7 +1,7 @@
 var util = require('util');
 var OAuth = require('oauth');
 
-exports.linkedin = function() { };
+exports.linkedin = function(mongodb) { };
 
 exports.linkedin.Client = Client;
 
