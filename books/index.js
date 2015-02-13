@@ -12,7 +12,7 @@ module.exports = function(mongodb){
 	var getBooks = function(movieTitle, lang, cb){
 
 		var body = "";
-		var link = "https://www.googleapis.com/books/v1/volumes?q="+movieTitle+"&langRestrict="+lang+"&fields=items(id,selfLink,volumeInfo)";
+		var link = "https://www.googleapis.com/books/v1/volumes?q="+movieTitle+"&langRestrict="+lang+"&fields=items(id,selfLink,volumeInfo)&maxResults=5";
 
 		https.get(link, function(res){
 			if(res.statusCode==200){
