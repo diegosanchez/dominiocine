@@ -1,0 +1,33 @@
+
+<div id="about"  class="container spacer about">
+<h2 class="text-center wowload fadeInUp">Trailers {{movie.title}}</h2>  
+	<div class="row">
+		<div class="col-sm-6 wowload fadeInLeft">
+			{{#each trailers}}
+				<iframe width="420" height="315" src="https://www.youtube.com/embed/{{this.media$group.yt$videoid.$t}}" frameborder="0" allowfullscreen></iframe>
+			{{/each}}
+		</div>
+	</div>	
+
+  
+<h2 class="text-center wowload fadeInUp">Imagenes de {{movie.title}}</h2> 
+
+	<div class="clearfix grid">
+		
+			{{#each images}}
+			 <figure class="effect-oscar  wowload fadeIn">
+				<img src="{{this.url}}" alt="titleNoFormatting"/>
+			</figure>
+			{{/each}}
+		
+	</div>	 
+  
+<h2 class="text-center wowload fadeInUp">Tweets de {{movie.title}}</h2>  
+
+<h2 class="text-center wowload fadeInUp">Libos de  {{movie.title}}</h2>  
+
+<h2 class="text-center wowload fadeInUp">Subtitulos de {{movie.title}} </h2>  
+ 
+  
+</div>
+<!-- #Cirlce Ends -->

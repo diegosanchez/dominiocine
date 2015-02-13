@@ -113,6 +113,26 @@ app.get("/home", function(req, res, next){
 });
 
 
+app.get("/movie/:id", function(req, res, next){
+	imdb.getMovieById(req.params.id, function(err, movie){
+				movie = movie[0];
+				
+				console.log(movie);
+			res.render("movie", {
+				layout: false
+				,movie: movie
+				,trailers : movie.trailers || []
+				,images: movie.images || []
+				,books : movie.books || []
+				,subtitles : movie.subtitles || []
+				,tweets : movie.tweets || []
+				,wikis : movie.wikis || []
+			});
+	});//end getLastMovies
+});
+
+
+
 var port = args["-port"] || 1234;
 
 http.listen(port, function(){
