@@ -15,6 +15,8 @@ module.exports = function(mongodb){
 	return $re;
   };
   
+  
+  
   var doRequest  = function(cb){
       console.log('buscando peliculas nuevas...');
 	  //"http://www.imdb.com/showtimes/location",
@@ -108,6 +110,12 @@ module.exports = function(mongodb){
 			_this.mongodb.films.find(query, {}).sort({date:1}, function(err, docs){
 				cb(err, docs);
 			});//end find and sort
-		}
-	}
+		};
+		
+		this.getMovieById = function(id, cb){
+			_this.mongodb.films.find({_id: _this.mongodb.ObjectId(id)}, {}).sort({date:1}, function(err, docs){
+				cb(err, docs);
+			});//end find and sort
+		};
+	};
 };

@@ -5,7 +5,7 @@ dc.config(function($interpolateProvider) {
     $interpolateProvider.endSymbol(']]');
 });
 
-dc.config(function($routeProvider) {
+dc.config(function($routeProvider,  $locationProvider) {
     $routeProvider
 
         .when('/login', {
@@ -20,14 +20,19 @@ dc.config(function($routeProvider) {
             templateUrl : '/pages/chat',
             controller  : 'bodyCtrl'
         })
-		.when('/movie/:title', {
-            templateUrl : '/movie/:title',
+		.when('/movie/:id', {
+            //templateUrl : '/movie/',
+			templateUrl : function(params){
+				return "/movie/"+params.id;
+			},
             controller  : 'bodyCtrl'
         })
         .when('/register', {
             templateUrl : '/pages/register',
             controller  : 'bodyCtrl'
         });
+		
+		 
 });
 
 
