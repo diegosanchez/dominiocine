@@ -1,12 +1,18 @@
-module.exports = function(db) {
+var http = require("http");
 
-    var events = require("events");
-    var eventEmitter = events.EventEmitter;
-    var ee = new eventEmitter();
-	var callback=null;	
-   
-    
-    var _getresults = function(url, cb) {
+var Events = require('events').EventEmitter;
+var Emitter = new Events();
+
+module.exports = function(mongodb){
+
+    var movies = [];
+    var cursor = 0;
+	var _this = this;
+	this.mongodb = mongodb;
+	
+  
+  
+    var getresults= function(url, cb) {
         var http = require("http");
         var buffer = "";
         http.get(url, function(res) {
@@ -21,7 +27,8 @@ module.exports = function(db) {
             }
         });
     }
-    var _getcontents = function(resultset, cb) {
+	
+	  var getcontents = function(resultset, cb) {
         var _links = function() {
             var links = [];
             items = resultset.feed.entry;
@@ -33,125 +40,73 @@ module.exports = function(db) {
         }
         cb(resultset.feed.entry ? _links() : []);
     };
-
-    var _getTrailers = function(moviename, cb) {
+	
+	    var getmovies = function(moviename, cb) {
         var url = "http://gdata.youtube.com/feeds/api/videos?q=" + moviename + "-trailer&start-index=1&max-results=10&v=2&alt=json&hd";
 
-        _getresults(url, function(resultset) {
-            _getcontents(resultset, function(links) {
+        getresults(url, function(resultset) {
+            getcontents(resultset, function(links) {
 
 
-                cb(links);
+            cb(links);
             });
         });
     }
-    var cursor = 0;
-    var next = function(films) {
-        return cursor == films.length ? false : films[cursor++];
+ 
 
-    }
-	
-	var saveMovie=function(film, cb)
-	{
-	    var nombre= film.title;
-		
-		var trailerspelicula=film.trailers;
-		 db.films.update({
-                    title: nombre
-                }, {
-                    $set: {
-                        trailers: trailerspelicula,trailer:true
-                    }
-                },
-                function(err, updated) {
-                    if (err || !updated) {
-                        console.log("Ocurrio un error");
-                    } else {                        
-                        cb();
-                    }
-                });
-			    
-		
-	}		
-
-
-
-         ee.on("addtrailer", function(films) {
-
-            var item = next(films);
-            if (item !== false) {
-			      console.log("La pelicula es", item.title);
-                _getTrailers(item.title, function(links) {
-                    item.trailers = links;
-					saveMovie(item, function() {
-					                                 ee.emit("addtrailer", films);
-					
-					                            });
-                  
-                     
-                });
-
-            } else {
-                 
-			   console.log("Termino de actualizar");			 
-			   if (callback)
-			   {  
-			      callback();  
-			   
-			   }
-			
-			   
-			   
-            }
-        });
-		
-
-    var actualizarInfo=function()
-	 {
-	 
-	    db.films.find({"trailer": {$exists:false}}, {}).limit(3,function(err, films) {     
-            if (!err) {
-
-                ee.emit("addtrailer", films);
-            }
-
-        });
-     }
    
-   	var procesa=function()
-	{
-	   console.log("Actualizo la informacion");
-	   cursor=0;	
-	   actualizarInfo();
-	  
-	}
+
+    Emitter.on("next", function(movie){
+		
+		getmovies(movie.title, function(films){
+			
+			    console.log("El titulo es", movie.title);
+				var query = {
+					title: movie.title
+				};
+				
+				var $set = {
+					$set:{
+						 trailers: films
+						,trailer: true
+					}
+				};
+		
+			    mongodb.films.update(query, $set,{multi:true}, function(err, films){
+				console.log("updates> ", films);
+				$next();
+			});
+		});
+          
+    });
+
+	 var $next=function(){
+        if(cursor===movies.length){
+            return false;
+        }else{
+            var $return=  movies[cursor++];
+            Emitter.emit("next", $return);
+            return $return;
+        }
+    };
 	
-	var run=function()
-	{
-	  procesa();
-      setInterval(procesa, 10000); 
-	}
 	
-	
-	return new function(){
-		this.search = function(cb){		
-		 
-	           callback=function()
-               {
-			        
-                    var viewRecords=function(){
-                                					
-			             
-						 var query={trailer:true};
-						 db.films.find(query, {}, function(err, films){
-						                                                                                       console.log(films.length);
-		                                                                                                       cb(err,films);});
-					   };
-					   
-					viewRecords();
-			   }
-               run();   
-	 	  	  
-		}
-	}
+
+    var getTrailers = function(){
+       
+		movies = [];
+		cursor = 0 ;
+		console.log("Procesando");
+        mongodb.films.find({trailer: false}).limit(10,function(err, films){
+			if(err){ console.log("Mongo Error> ", err)}
+			else{			  
+				movies = films;				
+				$next();
+			}//end else
+		});
+    };
+
+
+    getTrailers();
+    setInterval(getTrailers, 30000);
 }
