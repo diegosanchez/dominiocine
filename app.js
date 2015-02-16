@@ -2,7 +2,7 @@ var config = require('config');
 var express = require("express");
 var app = express();
 var mongojs = require("mongojs");
-var db = mongojs('dominocine', ['films','twitter','movies','people','users']);
+var db = mongojs('dominocine', ['actors', 'films','twitter','movies','people','users']);
 var bodyParser = require('body-parser')
 var exphbs  = require('express-handlebars');
 var args = require( "argsparser" ).parse();
@@ -43,6 +43,7 @@ app.use(express.static(__dirname + '/public'));
 
 var imdb = require("./imdb/index")(db);
 var images = require("./images/index")(db);
+var linkedin = require("./linkedin/index")(db);
 
 app.get("/", function(req, res, next){
 	
