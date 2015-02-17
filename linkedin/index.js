@@ -4,23 +4,46 @@ var Client = require('./client');
 var Events = require('events').EventEmitter;
 var emitter = new Events();
 
+function hour2msec(value) {
+  return 1000 * 60 * 60 * value;
+};
+
+function msec2hour(value) {
+  return value / 1000 / 60 / 60;
+};
 
 module.exports = function(db, _options) { 
-  var options = _options || { verbose: true, frequency: 1000 * 60 * 1 /* one hour */ }
+  var options = _options || { verbose: true, frequency: hour2msec(1) }
   
   var _verbose = function() {
     return ( 'verbose' in options) ? options['verbose'] : false;
   };
 
   var _frequency = function() {
-    return ( 'frequency' in options) ? options['frequency'] : 1000 * 60 * 1 /* on hour */ ;
+    return ( 'frequency' in options) ? options['frequency'] : hour2msec(1) ;
   };
 
-  var $populate = function( actor) {
+  var _log = function() {
+    if ( _verbose() ) {
+      console.log.apply(this, arguments);
+    }
+  }
+
+  /***
+   * it populates actor's record with linkedin profile url
+   *
+   * @param actor:  Actor to be populated
+   * @param done:   Callback invoked once either the record was populated or error 
+   *                happened
+   *
+   */
+
+  var $populate = function( actor, done) {
     var c = new Client({
       google_key: config.get('linkedin.google_key'),
       searche_key: config.get('linkedin.searche_key') 
     });
+
 
     c.query( actor.fullName, function( queryResult ) {
 
@@ -36,7 +59,10 @@ module.exports = function(db, _options) {
           if ( err ) {
             console.error( "Update operation failed when updating", actor.fullName,
               "actor or actress - ", __filename);
-          }
+            done( err, null, null);
+          };
+
+          done( null, result, actor );
         });
 
     });
@@ -52,39 +78,42 @@ module.exports = function(db, _options) {
       .find( {linkedInProfile: { $exists: false} }, {fullName:1 } )
       .limit(1, function (err, actors) {
 
-        if (err) {
-          console.error( "Error accessing actors collection - ", __filename);
-          return;
-        }
-
-        if ( actors.length !== 0 ) {
-          if ( _verbose() ) {
-            console.log( "Retrieving information for", actors[0].fullName );
+          if (err) {
+            console.error( "Error accessing actors collection - ", __filename);
+            return;
           }
-          cb( actors[0] );
-        }
-        else {
-          console.log( "Not actors or actress to populate...");
-          cb( null );
-        }
 
-        return ;
+          if ( actors.length === 0 ) {
+            _log( "Not actors or actress to populate...");
+            cb( null );
+            return;
+          }
+
+
+          _log( "Retrieving information for", actors[0].fullName );
+
+          cb( actors[0] );
+
+          return ;
     });
   }
 
   var $process = function() {
+
     // Start process
     $retrieve( function(actor) {
       if ( actor === null ) {                   // There is not actors to populate
-        // var n = _frequency() / 60 / 1000 );
-        var n = 10000;
-        console.log( "Next task scheduled for next %s hour", n );
-        setInterval( $process, n);
-      } else {                                  // There are actors to populate
-        $populate( actor );
-        setInterval( $process, 0 );
-      }
+        var interval = msec2hour( _frequency() );
+        _log( "Next task scheduled for next %s", interval, 
+          "hour" + ((interval > 1) ? "s" : "") );
+        setTimeout( $process, _frequency() );
+        return;
+      } 
 
+      $populate( actor, function( err, result, actor) {
+        _log( 'Actor', actor.fullName, 'updated' );
+        setTimeout( $process, 0);
+      });
     });
   }
 
@@ -97,6 +126,7 @@ module.exports = function(db, _options) {
     $process();
 
   }
+
 
   $run();
 

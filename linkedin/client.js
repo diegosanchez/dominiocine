@@ -43,6 +43,13 @@ Client.prototype.query = function(what, cb) {
 
     var response = JSON.parse(body);
 
+    // Daily quote exceeded
+    if ( 'error' in response ) {
+      console.error( 'Error %s - %s', response.error.code, response.error.message);
+      cb( response.error.code, response.error.errors );
+      return;
+    }
+
     // Not results
     if ( response.items.length === 0) {
       cb( null, {} );
